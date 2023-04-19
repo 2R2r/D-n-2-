@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
+          integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+    <title>Document</title>
+    <style>
+        .icon-hover-primary:hover {
+            border-color: #3b71ca !important;
+            background-color: white !important;
+        }
+
+        .icon-hover-primary:hover i {
+            color: #3b71ca !important;
+        }
+        .icon-hover-danger:hover {
+            border-color: #dc4c64 !important;
+            background-color: white !important;
+        }
+
+        .icon-hover-danger:hover i {
+            color: #dc4c64 !important;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <!-- Jumbotron -->
+    <div class="p-3 text-center bg-white border-bottom">
+        <div class="container">
+            <div class="row gy-3">
+                <!-- Left elements -->
+                <div class="col-lg-2 col-sm-4 col-4" style="margin: auto;">
+                    <a href="/" class="float-start" style="text-decoration: none">
+                        HOME
+                    </a>
+                </div>
+                <!-- Left elements -->
+                <!-- Center elements -->
+                <div class="order-lg-last col-lg-5 col-sm-8 col-8">
+                    <div class="d-flex float-end">
+                        <nav class="navbar navbar-expand-lg navbar-light ">
+                            <div class="container-fluid">
+                                <a class="navbar-brand" href="#">
+                                    <img th:src="@{/images/logo.png}" src="../static/images/logo.png" width="auto"
+                                         height="40" class="d-inline-block align-top" alt=""/>
+                                </a>
+                                <button class="navbar-toggler" type="button" data-toggle="collapse"
+                                        data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                                        aria-expanded="false" aria-label="Toggle navigation">
+                                    <span class="navbar-toggler-icon"></span>
+                                </button>
+
+                                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                                    <th:block
+                                            th:if="${user != null and (user.role == T(com.example.demo.entity.Role).SuperAdmin or user.role == T(com.example.demo.entity.Role).Admin )}">
+                                        <a href="/admin">Admin</a>
+                                    </th:block>
+                                    <ul class="navbar-nav">
+                                        <th:block th:if="${user != null}">
+                                            <li class="nav-item active">
+                                                <a class="nav-link" th:href="@{/logout}"
+                                                   th:text="| Logout as ${user.accountName} |" href="#">Logout</a>
+                                            </li>
+                                        </th:block>
+
+                                        <th:block th:if="${user == null}">
+                                            <li class="nav-item active">
+                                                <a class="nav-link" th:href="@{/login}" href="#">Login</a>
+                                            </li>
+                                            <li class="nav-item active">
+                                                <a class="nav-link" th:href="@{/register}" href="#">Register</a>
+                                            </li>
+                                        </th:block>
+                                    </ul>
+                                </div>
+                            </div>
+                        </nav>
+
+                        <a  th:href="@{/home/cart}"
+                            class=" rounded py-1 px-3 nav-link d-flex align-items-center">
+                            <i class="fas fa-shopping-cart m-1 me-md-2"></i>
+                            <p class="d-none d-md-block mb-0">My cart</p>
+                        </a>
+                    </div>
+
+                </div>
+                <!-- Center elements -->
+
+                <!-- Right elements -->
+                <div class="col-lg-5 col-md-12 col-12" style="margin: auto;">
+                    <form th:action="@{/home/search}" method="get">
+                        <div class="input-group float-center">
+                            <div class="form-outline">
+                                <input name="search" type="search" id="form1" class="form-control"/>
+                            </div>
+                            <button type="submit" class="btn btn-primary shadow-0">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <!-- Right elements -->
+            </div>
+        </div>
+    </div>
+    <!-- Jumbotron -->
+
+    <!-- Heading -->
+    <div class="bg-primary">
+        <div class="container py-4">
+            <!-- Breadcrumb -->
+
+            <!-- Breadcrumb -->
+        </div>
+    </div>
+    <!-- Heading -->
+</header>
+
+<!-- cart + summary -->
+<section class="bg-light my-5">
+    <div class="container">
+        <div class="row">
+            <!-- cart -->
+            <div class="col-lg-9">
+                <div class="card border shadow-0">
+                    <div class="m-4">
+                        <h4 class="card-title mb-4">Your shopping cart</h4>
+                        <div class="row gy-3 mb-4" th:each="cartItem, iStat : ${cartItems}">
+                            <div class="col-lg-5">
+                                <div class="me-lg-5">
+                                    <div class="d-flex">
+                                        <img th:src="@{${'/productImages/' + cartItem.image}}"  th:alt="${cartItem.name}" class="border rounded me-3" style="width: 96px; height: 96px;" />
+                                        <div class="">
+                                            <h3 href="#" class="nav-link" th:text="${cartItem.name }"></h3>
+                                            <p class="text-muted ml-3" th:text="${cartItem.description}"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-sm-6 col-6 d-flex flex-row flex-lg-column flex-xl-row text-nowrap mt-2">
+                                <div class="">
+                                    <text class="h6" th:text="${cartItem.quantity}"></text> <br />
+                                </div>
+                                <div class="ml-3">
+                                    <text class="h6" th:text="${cartItem.totalPrice}"></text> <br />
+                                </div>
+                            </div>
+                            <div class="col-lg col-sm-6 d-flex justify-content-sm-center justify-content-md-start justify-content-lg-center justify-content-xl-end mb-2 mt-2">
+                                <div class="float-md-end">
+                                    <a href="#" th:href="@{cart/delete/{id}(id = ${cartItem.product.id})}" class="btn btn-light border text-danger icon-hover-danger mr-5"> Remove</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="border-top pt-4 mx-4 mb-4">
+                        <p><i class="fas fa-truck text-muted fa-lg"></i> Free Delivery within 1-2 weeks</p>
+                        <p class="text-muted">
+                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+                            aliquip
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <!-- cart -->
+            <!-- summary -->
+            <div class="col-lg-3">
+                <div class="card mb-3 border shadow-0">
+                    <div class="card-body">
+                        <form>
+                            <div class="form-group">
+                                <label class="form-label">Have coupon?</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control border" name="" placeholder="Coupon code" />
+                                    <button class="btn btn-light border">Apply</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="card shadow-0 border">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <p class="mb-2">Total price:</p>
+                            <p class="mb-2" th:text="${totalPrice}"></p>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <p class="mb-2">Discount:</p>
+                            <p class="mb-2 text-success"></p>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <p class="mb-2"></p>
+                            <p class="mb-2"></p>
+                        </div>
+                        <hr />
+                        <div class="d-flex justify-content-between">
+                            <p class="mb-2">Total price:</p>
+                            <p class="mb-2 fw-bold">00.00</p>
+                        </div>
+                        <th:block th:if="${totalPrice > 0}">
+                            <div class="mt-3">
+                                <a href="#" th:href="@{/home/check-out}" class="btn btn-success w-100 shadow-0 mb-2"> Check out </a>
+                            </div>
+                        </th:block>
+                        <div class="mt-3">
+                            <a href="#" th:href="@{/home}" class="btn btn-light w-100 border mt-2"> Back to shop </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- summary -->
+        </div>
+    </div>
+</section>
+<!-- cart + summary -->
+
+
+<!-- Footer -->
+<footer class="text-center text-lg-start text-muted bg-primary mt-3">
+    <!-- Section: Links  -->
+    <section class="">
+        <div class="container text-center text-md-start pt-4 pb-4">
+            <!-- Grid row -->
+            <div class="row mt-3">
+                <!-- Grid column -->
+                <div class="col-12 col-lg-3 col-sm-12 mb-2">
+                    <!-- Content -->
+                    <a href="https://mdbootstrap.com/" target="_blank" class="text-white h2">
+                        MDB
+                    </a>
+                    <p class="mt-1 text-white">
+                        © 2023 Copyright: MDBootstrap.com
+                    </p>
+                </div>
+                <!-- Grid column -->
+
+                <!-- Grid column -->
+                <div class="col-6 col-sm-4 col-lg-2">
+                    <!-- Links -->
+                    <h6 class="text-uppercase text-white fw-bold mb-2">
+                        Store
+                    </h6>
+                    <ul class="list-unstyled mb-4">
+                        <li><a class="text-white-50" href="#">About us</a></li>
+                        <li><a class="text-white-50" href="#">Find store</a></li>
+                        <li><a class="text-white-50" href="#">Categories</a></li>
+                        <li><a class="text-white-50" href="#">Blogs</a></li>
+                    </ul>
+                </div>
+                <!-- Grid column -->
+
+                <!-- Grid column -->
+                <div class="col-6 col-sm-4 col-lg-2">
+                    <!-- Links -->
+                    <h6 class="text-uppercase text-white fw-bold mb-2">
+                        Information
+                    </h6>
+                    <ul class="list-unstyled mb-4">
+                        <li><a class="text-white-50" href="#">Help center</a></li>
+                        <li><a class="text-white-50" href="#">Money refund</a></li>
+                        <li><a class="text-white-50" href="#">Shipping info</a></li>
+                        <li><a class="text-white-50" href="#">Refunds</a></li>
+                    </ul>
+                </div>
+                <!-- Grid column -->
+
+                <!-- Grid column -->
+                <div class="col-6 col-sm-4 col-lg-2">
+                    <!-- Links -->
+                    <h6 class="text-uppercase text-white fw-bold mb-2">
+                        Support
+                    </h6>
+                    <ul class="list-unstyled mb-4">
+                        <li><a class="text-white-50" href="#">Help center</a></li>
+                        <li><a class="text-white-50" href="#">Documents</a></li>
+                        <li><a class="text-white-50" href="#">Account restore</a></li>
+                        <li><a class="text-white-50" href="#">My orders</a></li>
+                    </ul>
+                </div>
+                <!-- Grid column -->
+
+                <!-- Grid column -->
+                <div class="col-12 col-sm-12 col-lg-3">
+                    <!-- Links -->
+                    <h6 class="text-uppercase text-white fw-bold mb-2">Newsletter</h6>
+                    <p class="text-white">Stay in touch with latest updates about our products and offers</p>
+                    <div class="input-group mb-3">
+                        <input type="email" class="form-control border" placeholder="Email" aria-label="Email" aria-describedby="button-addon2" />
+                        <button class="btn btn-light border shadow-0" type="button" id="button-addon2" data-mdb-ripple-color="dark">
+                            Join
+                        </button>
+                    </div>
+                </div>
+                <!-- Grid column -->
+            </div>
+            <!-- Grid row -->
+        </div>
+    </section>
+    <!-- Section: Links  -->
+
+    <div class="">
+        <div class="container">
+            <div class="d-flex justify-content-between py-4 border-top">
+                <!--- payment --->
+                <div>
+                    <i class="fab fa-lg fa-cc-visa text-white"></i>
+                    <i class="fab fa-lg fa-cc-amex text-white"></i>
+                    <i class="fab fa-lg fa-cc-mastercard text-white"></i>
+                    <i class="fab fa-lg fa-cc-paypal text-white"></i>
+                </div>
+                <!--- payment --->
+
+                <!--- language selector --->
+                <div class="dropdown dropup">
+                    <a class="dropdown-toggle text-white" href="#" id="Dropdown" role="button" data-mdb-toggle="dropdown" aria-expanded="false"> <i class="flag-united-kingdom flag m-0 me-1"></i>English </a>
+
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="Dropdown">
+                        <li>
+                            <a class="dropdown-item" href="#"><i class="flag-united-kingdom flag"></i>English <i class="fa fa-check text-success ms-2"></i></a>
+                        </li>
+                        <li><hr class="dropdown-divider" /></li>
+                        <li>
+                            <a class="dropdown-item" href="#"><i class="flag-poland flag"></i>Polski</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="#"><i class="flag-china flag"></i>中文</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="#"><i class="flag-japan flag"></i>日本語</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="#"><i class="flag-germany flag"></i>Deutsch</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="#"><i class="flag-france flag"></i>Français</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="#"><i class="flag-spain flag"></i>Español</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="#"><i class="flag-russia flag"></i>Русский</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="#"><i class="flag-portugal flag"></i>Português</a>
+                        </li>
+                    </ul>
+                </div>
+                <!--- language selector --->
+            </div>
+        </div>
+    </div>
+</footer>
+<!-- Footer -->
+
+
+
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+</body>
+</html>
